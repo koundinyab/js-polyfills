@@ -104,3 +104,186 @@ Function.prototype.myBind = function myBind(context, ...args) {
     };
     return bound;
 };
+/**
+ * Write a function myTrim that emulates the behavior of the trim method on strings.
+ * The myTrim function should remove whitespace from both ends of the string and return the trimmed string.
+ */
+String.prototype.myTrim = function () {
+    let start = 0;
+    let end = this.length - 1;
+    while (
+        (start < this.length && this[start] === " ") ||
+        this[start] === "\t" ||
+        this[start] === "\n"
+    ) {
+        start = start + 1;
+    }
+    while (
+        (end > 0 && this[end] === " ") ||
+        this[end] === "\t" ||
+        this[end] === "\n"
+    ) {
+        end = end - 1;
+    }
+
+    let result = "";
+    for (let i = start; i <= end; i++) {
+        result = result + this[i];
+    }
+    return result;
+};
+/**
+ * Write a function myIncludes that emulates the behavior of the includes method on arrays.
+ * The myIncludes function should take a value to search for as its first argument and an optional index from which to search as its second argument.
+ * It should return true if the value is found in the array, false otherwise.
+ * If an index is provided, the search will start at that index; otherwise, the search will start at index 0.
+ */
+Array.prototype.myIncludes = function (ele, index) {
+    if (index === undefined) index = 0;
+    for (let i = index; i < this.length; i++) {
+        if (this[i] === ele) {
+            return true;
+        }
+    }
+    return false;
+};
+/**
+ * Array.isArray()
+ * Your polyfill should return true if the value is an array and false otherwise.
+ */
+function isArray(value) {
+    if (
+        typeof tvaluehis === "object" &&
+        thvalueis !== null &&
+        typeof value.length === "number" &&
+        typeof value.push === "function"
+    ) {
+        return true;
+    } else return false;
+}
+/**
+ * Write a polyfill for the Array.from method, which creates a new Array instance from an array-like or iterable object.
+ * Your polyfill should accept an array-like or iterable object as the first argument
+ * and an optional mapping function as the second argument, and it should return a new Array instance based on the input.
+ */
+function makeArray(val, mapFunc, thisArg) {
+    if (val === null) throw new TypeError("value cannot be null or undefined");
+    let result = [];
+    let IteratorMethod = val[Symbol.iterator];
+    if (typeof IteratorMethod !== "function") {
+        throw new TypeError("value must be iterable");
+    }
+    for (let v of val) {
+        result.push(mapFunc ? mapFunc.call(thisArg, v) : v);
+    }
+    return result;
+}
+/**
+ * Promise po;yfil
+ * Implement a polyfill for the Promise object, which represents a value that may not be available yet but will be resolved at some point in the future.
+ * Your polyfill should mimic the behavior of native promises, supporting the then, catch, and finally methods.
+ */
+function mypromise(callBack) {
+    let resolvedValue;
+    let rejectedValue;
+    let isResolved = false;
+    let isRejected = false;
+    let thenCallBack;
+    let finallyCallBack;
+    let catchCallBack;
+    function myThen(thenCallBack) {
+        if (isResolved) {
+            thenCallBack(resolvedValue);
+        } else {
+            thenCallBack = thenCallBack;
+        }
+        return this;
+    }
+    function myCatch(catchCallBack) {
+        if (isRejected) {
+            catchCallBack(rejectedValue);
+        } else {
+            catchCallBack = catchCallBack;
+        }
+        return this;
+    }
+    function myFinally(finallyCallBack) {
+        finallyCallBack = finallyCallBack;
+        return this;
+    }
+    function resolve(value) {
+        if (!isResolved && !isRejected) {
+            resolvedValue = value;
+            isResolved = true;
+            if (thenCallBack) {
+                thenCallBack(resolvedValue);
+            }
+            if (finallyCallBack) {
+                finallyCallBack();
+            }
+        }
+    }
+    function reject(reason) {
+        if (!isResolved && !isRejected) {
+            rejectedValue = reason;
+            isRejected = true;
+            if (catchCallBack) {
+                catchCallBack(reason);
+            }
+            if (finallyCallBack) {
+                finallyCallBack(reason);
+            }
+        }
+    }
+    callBack(resolve, reject);
+    return {
+        myThen,
+        myCatch,
+        myFinally,
+    };
+}
+
+/**
+ * Implement a polyfill for the Promise.all method, which takes an iterable of promises as an input and returns a single Promise
+ * that resolves when all of the input promises have resolved, or rejects with the reason of the first promise that rejects.
+ * Your polyfill should return a new Promise that behaves according to the above description.
+ */
+function myPromiseAll(promiseArr) {
+    let returnPromise = new Promise((res, rej) => {
+        let result = [];
+        let completedCount = 0;
+        for (let i = 0; i < promiseArr.length; i++) {
+            promiseArr[i]
+                .then((val) => {
+                    result.push(val);
+                    completedCount = completedCount + 1;
+                    if (completedCount === promiseArr.length) {
+                        res(result);
+                    }
+                })
+                .catch((err) => {
+                    result.push(err);
+                    rej(result);
+                });
+        }
+    });
+
+    return returnPromise;
+}
+
+/**
+ * Implement a polyfill for the flat() method on arrays.
+ * The flat() method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+ * Your polyfill should mimic this behavior, handling arrays of any depth and flattening them into a single array.
+ */
+function myFlat(arr, depth) {
+    let result = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (Array.isArray(arr[i]) && depth > 0) {
+            result = result.concat(myFlat(arr[i], depth - 1));
+        } else {
+            result.push(arr[i]);
+        }
+    }
+    return result;
+}
