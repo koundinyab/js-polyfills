@@ -153,8 +153,8 @@ Array.prototype.myIncludes = function (ele, index) {
  */
 function isArray(value) {
     if (
-        typeof tvaluehis === "object" &&
-        thvalueis !== null &&
+        typeof value === "object" &&
+        value !== null &&
         typeof value.length === "number" &&
         typeof value.push === "function"
     ) {
