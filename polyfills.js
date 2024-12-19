@@ -287,3 +287,76 @@ function myFlat(arr, depth) {
     }
     return result;
 }
+
+const curryOperation = (operation) => (...args) => {
+    let result = args.reduce((acc, num) => acc + num, 0); // Default operation is addition
+  
+    function curried(...newArgs) {
+      // If no arguments are passed, return the result
+      if (newArgs.length === 0) {
+        return result;
+      }
+  
+      // Apply the operation on the new arguments
+      result = newArgs.reduce((acc, num) => operation(acc, num), result);
+  
+      // Return the curried function for further chaining
+      return curried;
+    }
+  
+    return curried;
+  };
+  
+  // Example operations
+  const add = (a, b) => a + b;
+  const multiply = (a, b) => a * b;
+  const subtract = (a, b) => a - b;
+  
+  // Example usage:
+  console.log(curryOperation(add)(2)(2, 3)());       // 7 (Addition)
+  console.log(curryOperation(multiply)(2)(2, 3)());  // 12 (Multiplication)
+  console.log(curryOperation(subtract)(10)(2, 3)()); // 5 (Subtraction)
+
+  
+  const addCurried = (...args) => {
+    let sum = 0;
+  
+    // A closure function to handle the currying and accumulation
+    function adder(...newArgs) {
+      // If no arguments are passed, return the accumulated sum
+      if (newArgs.length === 0) {
+        return sum;
+      }
+  
+      // Add new arguments to the sum
+      sum += newArgs.reduce((acc, num) => acc + num, 0);
+  
+      // Return the function to continue currying
+      return adder;
+    }
+  
+    // Start the accumulation with the initial arguments
+    sum += args.reduce((acc, num) => acc + num, 0);
+  
+    return adder;
+  };
+  
+  // Example usage:
+  console.log(addCurried(2)(2, 3)());      // 7
+  console.log(addCurried()(0, 1, 3)());    // 4
+  console.log(addCurried(1)(2)(3)(4)());   // 10
+
+  function once(fn) {
+    let called = false;
+    let result;
+  
+    return function (...args) {
+      if (!called) {
+        called = true;
+        result = fn.apply(this, args);
+      }
+      return result;
+    };
+  }
+  
+  
