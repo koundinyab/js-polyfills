@@ -368,5 +368,19 @@ const curryOperation = (operation) => (...args) => {
           }, d)
       }
   }
+
+Function.prototype.myCall = function (context, ...args) {
+    if (context === null || context === undefined) {
+        context = globalThis; // Handles both null and undefined, works in browsers & Node.js
+    }
+
+    const tempFn = Symbol(); // Use Symbol to avoid key collision
+    context[tempFn] = this;  // Assign 'this' (the function) to the context
+
+    const result = context[tempFn](...args); // Invoke function with provided arguments
+    delete context[tempFn]; // Clean up after execution
+
+    return result; // Return the result of function execution
+};
   
   
