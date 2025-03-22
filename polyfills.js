@@ -53,7 +53,9 @@ Array.prototype.myReduce = function (callBack, intital) {
     let result = intital !== undefined ? intital : this[0];
     let startIndex = intital !== undefined ? 0 : 1;
     for (let i = startIndex; i < this.length; i++) {
-        result = callBack(result, this[i], i, this);
+        if (this[i]) {
+            result = callBack(result, this[i], i, this);
+        }
     }
     return result;
 };
