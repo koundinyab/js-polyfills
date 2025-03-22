@@ -359,15 +359,16 @@ const curryOperation = (operation) => (...args) => {
     };
   }
 
-  function debounce(cb, delay) {
-      let timer;
-      return function (...args) {
-          if(timer) clearTimeout(timer);
-          timer = setTimeout(() => {
-              cb(...args);
-          }, d)
-      }
-  }
+function debounce(func, wait) {
+  let timer;
+  return function (...args) {
+    const context = this;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      return func.apply(context, args);
+    }, wait);
+  };
+}
 
 Function.prototype.myCall = function (context, ...args) {
     if (context === null || context === undefined) {
