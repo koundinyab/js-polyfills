@@ -255,6 +255,13 @@ function myPromiseAll(promiseArr) {
         let result = [];
         let completedCount = 0;
         for (let i = 0; i < promiseArr.length; i++) {
+            if (typeof iterable[i] !== "object") {
+        result[i] = iterable[i];
+        resolvedPromisesCount = resolvedPromisesCount + 1;
+        if (resolvedPromisesCount === iterable.length) {
+          resolve(result);
+        }
+      } else {
             promiseArr[i]
                 .then((val) => {
                     result.push(val);
@@ -267,6 +274,7 @@ function myPromiseAll(promiseArr) {
                     result.push(err);
                     rej(result);
                 });
+            }
         }
     });
 
