@@ -405,5 +405,33 @@ function throttle(func, wait) {
     }
   };
 }
+
+function promiseAny(iterable) {
+    let rejectedResult = [];
+    let rejectedCount = 0;
+    return new Promise((resolve, reject) => {
+      if (iterable.length === 0) {
+        reject(new AggregateError([]));
+      } else {
+        for (let i = 0; i < iterable.length; i++) {
+          // very very important.
+          if (typeof iterable[i] !== "object") {
+            iterable[i] = Promise.resolve(iterable[i]);
+          }
+          iterable[i]
+            .then((data) => {
+              resolve(data);
+            })
+            .catch((err) => {
+              rejectedResult[i] = err;
+              rejectedCount = rejectedCount + 1;
+              if (rejectedCount === iterable.length) {
+                reject(new AggregateError(rejectedResult));
+              }
+            });
+        }
+      }
+    });
+  }
   
   
