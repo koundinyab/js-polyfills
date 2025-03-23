@@ -385,5 +385,17 @@ Function.prototype.myCall = function (context, ...args) {
 
     return result; // Return the result of function execution
 };
+
+function throttle(func, wait) {
+  let start = 0;
+  return function (...args) {
+    const context = this;
+    const now = Date.now();
+    if (now - start >= wait) {
+      start = now;
+      return func.apply(context, args);
+    }
+  };
+}
   
   
