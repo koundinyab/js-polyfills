@@ -287,6 +287,8 @@ function myPromiseAll(promiseArr) {
  * Your polyfill should mimic this behavior, handling arrays of any depth and flattening them into a single array.
  */
 function myFlat(arr, depth) {
+    if (value.length === 0) return [];
+    if (!Array.isArray(value)) throw "value must be an array";
     let result = [];
     for (let i = 0; i < arr.length; i++) {
         if (Array.isArray(arr[i]) && depth > 0) {
