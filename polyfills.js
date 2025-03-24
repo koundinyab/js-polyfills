@@ -435,5 +435,39 @@ function promiseAny(iterable) {
       }
     });
   }
+
+function deepEqual(valueA, valueB) {
+    let returnValue = true;
+    if (typeof valueA !== typeof valueB) return false;
+    if (typeof valueA !== "object" || valueA === null || valueB === null) {
+      return valueA === valueB;
+    } else {
+      const isValueAArray = Array.isArray(valueA);
+      const isValueBArray = Array.isArray(valueB);
+      if (
+        (isValueAArray && !isValueBArray) ||
+        (isValueBArray && !isValueAArray)
+      ) {
+        return false;
+      }
+      if (isValueAArray && isValueBArray) {
+        if (valueA.length !== valueB.length) return false;
+        for (let i = 0; i < valueA.length; i++) {
+          if (!deepEqual(valueA[i], valueB[i])) return false;
+        }
+        return true;
+      }
+      if (typeof valueA == "object" && typeof valueB === "object") {
+        if (Object.keys(valueA).length !== Object.keys(valueB).length)
+          return false;
+        for (let key in valueA) {
+          if (!deepEqual(valueA[key], valueB[key])) return false;
+        }
+        return true;
+      }
+    }
+  
+    return returnValue;
+  }
   
   
