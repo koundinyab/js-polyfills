@@ -469,5 +469,18 @@ function deepEqual(valueA, valueB) {
   
     return returnValue;
   }
+  // can use object.freeze
+  function deepFreeze(obj) {
+    if (obj === null || typeof obj !== 'object') {
+      return obj; // Skip freezing if it's not an object
+    }
+    Object.freeze(obj)
+    for(let key in obj) {
+      if (typeof obj[key] === 'object') {
+        deepFreeze(obj[key]);
+      }
+    }
+    return obj;
+  }
   
   
